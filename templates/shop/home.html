@@ -1,0 +1,913 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Flora - Wear the Positivity | Women's & Kids' Fashion{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<style>
+    /* Hero Section with Video/Image Carousel */
+    .hero {
+        position: relative;
+        height: 100vh;
+        min-height: 600px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .hero-carousel {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+    }
+
+    .hero-carousel .swiper-slide {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    .hero-carousel .swiper-slide img,
+.hero-carousel .swiper-slide video {
+    width: 100%;
+    height: 700px; /* Fixed height */
+    object-fit: cover;
+    object-position: center;
+}
+
+    .hero-carousel .swiper-slide::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(245, 111, 211, 0.7), rgba(180, 75, 154, 0.7));
+        z-index: 1;
+    }
+
+    /* Floating particles effect */
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><circle cx="50" cy="50" r="2" fill="white" opacity="0.1"/></svg>');
+        animation: float 20s infinite linear;
+        z-index: 2;
+        pointer-events: none;
+    }
+
+    @keyframes float {
+        from { transform: translateY(0); }
+        to { transform: translateY(-100px); }
+    }
+
+    .hero-content {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        position: relative;
+        z-index: 3;
+        text-align: center;
+        color: white;
+        animation: fadeInUp 1s ease-out;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .hero h1 {
+        font-size: 4rem;
+        margin-bottom: 1.5rem;
+        text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+        font-weight: 800;
+        line-height: 1.2;
+        animation: slideInLeft 1s ease-out 0.3s both;
+    }
+
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .hero p {
+        font-size: 1.4rem;
+        margin-bottom: 2.5rem;
+        opacity: 0.95;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        animation: slideInRight 1s ease-out 0.5s both;
+    }
+
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .hero-buttons {
+        display: flex;
+        gap: 1.5rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        animation: fadeIn 1s ease-out 0.7s both;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .btn {
+        padding: 1rem 2.5rem;
+        font-size: 1.1rem;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-block;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+
+    .btn:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+
+    .btn-primary {
+        background: white;
+        color: #B44B9A;
+        box-shadow: 0 5px 20px rgba(255, 255, 255, 0.4);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(255, 255, 255, 0.5);
+    }
+
+    .btn-secondary {
+        background: transparent;
+        color: white;
+        border: 2px solid white;
+    }
+
+    .btn-secondary:hover {
+        background: white;
+        color: #B44B9A;
+        transform: translateY(-3px);
+    }
+
+    /* Carousel Navigation */
+    .swiper-button-next,
+    .swiper-button-prev {
+        color: white;
+        background: rgba(255, 255, 255, 0.2);
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        backdrop-filter: blur(10px);
+    }
+
+    .swiper-button-next:after,
+    .swiper-button-prev:after {
+        font-size: 20px;
+    }
+
+    .swiper-pagination-bullet {
+        background: white;
+        opacity: 0.5;
+        width: 12px;
+        height: 12px;
+    }
+
+    .swiper-pagination-bullet-active {
+        opacity: 1;
+        background: white;
+    }
+
+    /* Product Carousel Section */
+    .product-carousel-section {
+        padding: 5rem 0;
+        background: linear-gradient(135deg, #f8f9fa 0%, #fff5f8 100%);
+        overflow: hidden;
+    }
+
+    .product-carousel {
+        position: relative;
+        padding: 2rem 0;
+    }
+
+    .product-carousel .swiper-slide {
+        height: auto;
+    }
+
+    /* Section Titles */
+    .section-title {
+        text-align: center;
+        margin: 0 0 3rem;
+        animation: fadeInUp 0.8s ease-out;
+    }
+
+    .section-title h2 {
+        font-size: 3rem;
+        background: linear-gradient(135deg, #f56fe8, #B44B9A);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+        font-weight: 800;
+        position: relative;
+        display: inline-block;
+    }
+
+    .section-title h2::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(90deg, #F56FD3, #B44B9A);
+        border-radius: 2px;
+    }
+
+    .section-title p {
+        color: #6c757d;
+        font-size: 1.2rem;
+        margin-top: 1.5rem;
+    }
+
+    /* Categories Grid */
+    .categories-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-bottom: 4rem;
+    }
+
+    .category-card {
+        background: linear-gradient(135deg, #F56FD3 0%, #B44B9A 100%);
+        border-radius: 25px;
+        overflow: hidden;
+        transition: all 0.4s ease;
+        cursor: pointer;
+        position: relative;
+        height: 350px;
+        box-shadow: 0 10px 30px rgba(245, 111, 211, 0.3);
+    }
+
+    .category-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><defs><pattern id="pattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="white" opacity="0.1"/></pattern></defs><rect fill="url(%23pattern)" width="100" height="100"/></svg>');
+        opacity: 0;
+        transition: opacity 0.4s ease;
+    }
+
+    .category-card:hover {
+        transform: translateY(-15px) scale(1.02);
+        box-shadow: 0 20px 50px rgba(245, 111, 211, 0.4);
+    }
+
+    .category-card:hover::before {
+        opacity: 1;
+    }
+
+    .category-content {
+        position: relative;
+        z-index: 1;
+        padding: 2.5rem;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        color: white;
+    }
+
+    .category-content h3 {
+        font-size: 2rem;
+        margin-bottom: 0.8rem;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .category-content p {
+        opacity: 0.95;
+        font-size: 1.1rem;
+    }
+
+    /* Products Grid */
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2.5rem;
+        margin-bottom: 4rem;
+    }
+
+    .product-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+    .product-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(245, 111, 211, 0.1), rgba(180, 75, 154, 0.1));
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        z-index: 1;
+    }
+
+    .product-card:hover {
+        transform: translateY(-15px);
+        box-shadow: 0 20px 40px rgba(245, 111, 211, 0.3);
+    }
+
+    .product-card:hover::before {
+        opacity: 1;
+    }
+
+    .product-image {
+        width: 100%;
+        height: 380px;
+        background: linear-gradient(135deg, #FFE4EC, #FFF0F6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 5rem;
+        color: #F56FD3;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .product-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s ease;
+    }
+
+    .product-card:hover .product-image img {
+        transform: scale(1.1);
+    }
+
+    .product-badge {
+        position: absolute;
+        top: 1.2rem;
+        right: 1.2rem;
+        background: linear-gradient(135deg, #FF6B9D, #C9184A);
+        color: white;
+        padding: 0.5rem 1.2rem;
+        border-radius: 25px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        z-index: 2;
+        box-shadow: 0 4px 15px rgba(201, 24, 74, 0.4);
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+
+    .product-badge.featured {
+        background: linear-gradient(135deg, #9D4EDD, #7209B7);
+    }
+
+    .product-info {
+        padding: 2rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .product-category {
+        color: #F56FD3;
+        font-size: 0.95rem;
+        margin-bottom: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .product-info h3 {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+        color: #2d3748;
+        font-weight: 700;
+        line-height: 1.4;
+    }
+
+    .product-price {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin: 1rem 0;
+    }
+
+    .price-current {
+        font-size: 1.8rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #B44B9A, #F56FD3);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .price-old {
+        font-size: 1.2rem;
+        color: #a0aec0;
+        text-decoration: line-through;
+    }
+
+    /* Features Section */
+    .features {
+        background: linear-gradient(135deg, #F56FD3 0%, #B44B9A 100%);
+        padding: 5rem 2rem;
+        margin: 5rem 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .features::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><defs><pattern id="grid" x="0" y="0" width="50" height="50" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="2" fill="white" opacity="0.1"/></pattern></defs><rect fill="url(%23grid)" width="100" height="100"/></svg>');
+        animation: float 30s infinite linear;
+    }
+
+    .features-grid {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 3rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .feature-item {
+        text-align: center;
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        transition: all 0.4s ease;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .feature-item:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .feature-icon {
+        width: 100px;
+        height: 100px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 2.5rem;
+        background: linear-gradient(135deg, #fff, #ffe4ec);
+        color: #B44B9A;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.4s ease;
+    }
+
+    .feature-item:hover .feature-icon {
+        transform: rotateY(360deg);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .feature-item h3 {
+        margin-bottom: 1rem;
+        color: white;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+    .feature-item p {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.1rem;
+    }
+
+    /* Container */
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 4rem 2rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .hero h1 {
+            font-size: 2.5rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+        }
+
+        .section-title h2 {
+            font-size: 2rem;
+        }
+
+        .products-grid {
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .product-image {
+            height: 280px;
+        }
+
+        .swiper-button-next,
+        .swiper-button-prev {
+            display: none;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .hero h1 {
+            font-size: 1.8rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.8rem;
+            font-size: 1rem;
+        }
+    }
+    /* Loader */
+#loader {
+  position: fixed;
+  inset: 0;
+  background: #fff;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: fadeOut 1s ease forwards;
+  animation-delay: 2.5s;
+}
+
+#loader img {
+  width: 100px;
+  animation: zoomIn 1.5s ease;
+}
+
+#loader h1 {
+  margin-top: 10px;
+  font-family: 'Playfair Display', serif;
+  color: #d43b8c;
+  letter-spacing: 4px;
+}
+
+@keyframes zoomIn {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fadeOut {
+  to { opacity: 0; visibility: hidden; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- LOADER -->
+<div id="loader">
+  <img src="{% static 'images/image-removebg-preview.png' %}" alt="Flora Logo">
+  <!-- <span>INSPIRE WITH YOUR OWN STYLE</span> -->
+</div>
+<!-- Hero Section with Carousel -->
+<section class="hero">
+    <div class="hero-carousel swiper">
+        <div class="swiper-wrapper">
+            <!-- Video Slide -->
+            
+            <!-- Image Slides -->
+            <div class="swiper-slide">
+                <img src="{% static 'images/happycustomers.png' %}" alt="Flora Fashion Collection">
+            </div>
+            <div class="swiper-slide">
+                <img src="{% static 'images/customers1.jpeg' %}" alt="Flora Women's Wear">
+            </div>
+            <div class="swiper-slide">
+                <img src="{% static 'images/customers2.jpeg' %}" alt="Flora Kids Fashion">
+            </div>
+        </div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-pagination"></div>
+    </div>
+
+    <div class="hero-content">
+        <h1>Inspire With Your Own Style</h1>
+        <p>Discover fashion that combines comfort, elegance, and vibrant design. From traditional Kurtis to contemporary Western styles for womens and kids.</p>
+        <div class="hero-buttons">
+            <a href="{% url 'shop:product_list' %}" class="btn btn-primary">Shop Now</a>
+            <a href="{% url 'shop:blog_list' %}" class="btn btn-secondary">Style Inspiration</a>
+        </div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<div class="container">
+    <div class="section-title">
+        <h2>Shop by Category</h2>
+        <p>Explore our curated collections</p>
+    </div>
+    
+    <div class="categories-grid">
+        {% if categories %}
+            {% for category in categories %}
+            <a href="{% url 'shop:product_list_by_category' category.slug %}" class="category-card" 
+               {% if category.image %}
+               style="background-image: linear-gradient(135deg, rgba(245, 111, 211, 0.7), rgba(180, 75, 154, 0.7)), url('{{ category.image.url }}'); background-size: cover; background-position: center;"
+               {% endif %}>
+                <div class="category-content">
+                    <h3>{{ category.name }}</h3>
+                    <p>{{ category.description|default:"Discover our collection" }}</p>
+                </div>
+            </a>
+            {% endfor %}
+        {% else %}
+        <!-- Default categories if none exist -->
+        <div class="category-card">
+            <div class="category-content">
+                <h3>Traditional Wear</h3>
+                <p>Elegant Kurtis & Churidhar sets</p>
+            </div>
+        </div>
+        <div class="category-card">
+            <div class="category-content">
+                <h3>Western Collection</h3>
+                <p>Modern styles for everyday wear</p>
+            </div>
+        </div>
+        <div class="category-card">
+            <div class="category-content">
+                <h3>Kids Fashion</h3>
+                <p>Comfortable & playful designs</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Featured Products Carousel -->
+{% if featured_products %}
+<div class="product-carousel-section">
+    <div class="container">
+        <div class="section-title">
+            <h2>Featured Products</h2>
+            <p>Handpicked favorites just for you</p>
+        </div>
+        
+        <div class="product-carousel swiper">
+            <div class="swiper-wrapper">
+                {% for product in featured_products %}
+                <div class="swiper-slide">
+                    <a href="{{ product.get_absolute_url }}" class="product-card">
+                        <div class="product-image">
+                            {% if product.images.all %}
+                                <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
+                            {% else %}
+                                <i class="fas fa-tshirt"></i>
+                            {% endif %}
+                            
+                            {% if product.get_discount_percentage %}
+                            <span class="product-badge">{{ product.get_discount_percentage }}% OFF</span>
+                            {% elif product.featured %}
+                            <span class="product-badge featured">Featured</span>
+                            {% endif %}
+                        </div>
+                        <div class="product-info">
+                            <div class="product-category">{{ product.category.name }}</div>
+                            <h3>{{ product.name }}</h3>
+                            <div class="product-price">
+                                <span class="price-current">₹{{ product.get_display_price }}</span>
+                                {% if product.discount_price %}
+                                <span class="price-old">₹{{ product.price }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- New Arrivals -->
+{% if new_arrivals %}
+<div class="container">
+    <div class="section-title">
+        <h2>New Arrivals</h2>
+        <p>Fresh styles added weekly</p>
+    </div>
+    
+    <div class="products-grid">
+        {% for product in new_arrivals %}
+        <a href="{{ product.get_absolute_url }}" class="product-card">
+            <div class="product-image">
+                {% if product.images.all %}
+                    <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
+                {% else %}
+                    <i class="fas fa-tshirt"></i>
+                {% endif %}
+            </div>
+            <div class="product-info">
+                <div class="product-category">{{ product.category.name }}</div>
+                <h3>{{ product.name }}</h3>
+                <div class="product-price">
+                    <span class="price-current">₹{{ product.get_display_price }}</span>
+                    {% if product.discount_price %}
+                    <span class="price-old">₹{{ product.price }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+<section class="video-carousel-section">
+  <div class="video-carousel">
+
+    <button class="nav-arrow left" onclick="slide(-1)">&#10094;</button>
+
+    <div class="video-track" id="videoTrack">
+      {% for v in videos %}
+      <video muted autoplay loop playsinline>
+        <source src="{{ v.video.url }}" type="video/mp4">
+      </video>
+      {% endfor %}
+    </div>
+
+    <button class="nav-arrow right" onclick="slide(1)">&#10095;</button>
+
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="features">
+    <div class="features-grid">
+        <div class="feature-item">
+            <div class="feature-icon">
+                <i class="fas fa-truck"></i>
+            </div>
+            <h3>Free Shipping</h3>
+            <p>On orders over ₹999</p>
+        </div>
+        <div class="feature-item">
+            <div class="feature-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3>Secure Payment</h3>
+            <p>100% secure transactions</p>
+        </div>
+        <div class="feature-item">
+            <div class="feature-icon">
+                <i class="fas fa-undo"></i>
+            </div>
+            <h3>Easy Returns</h3>
+            <p>30-day return policy</p>
+        </div>
+        <div class="feature-item">
+            <div class="feature-icon">
+                <i class="fas fa-headset"></i>
+            </div>
+            <h3>24/7 Support</h3>
+            <p>Always here to help</p>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+    // Hero Carousel
+    const heroSwiper = new Swiper('.hero-carousel', {
+        loop: true,
+        autoplay: {
+            delay: 5000,
+            disableOnInteraction: false,
+        },
+        effect: 'fade',
+        fadeEffect: {
+            crossFade: true
+        },
+        speed: 1000,
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        navigation: {
+            nextEl: '.hero-carousel .swiper-button-next',
+            prevEl: '.hero-carousel .swiper-button-prev',
+        },
+    });
+
+    // Product Carousel
+    const productSwiper = new Swiper('.product-carousel', {
+        loop: true,
+        autoplay: {
+            delay: 3000,
+            disableOnInteraction: false,
+        },
+        slidesPerView: 1,
+        spaceBetween: 30,
+        pagination: {
+            el: '.product-carousel .swiper-pagination',
+            clickable: true,
+        },
+        navigation: {
+            nextEl: '.product-carousel .swiper-button-next',
+            prevEl: '.product-carousel .swiper-button-prev',
+        },
+        breakpoints: {
+            640: {
+                slidesPerView: 2,
+                spaceBetween: 20,
+            },
+            768: {
+                slidesPerView: 3,
+                spaceBetween: 25,
+            },
+            1024: {
+                slidesPerView: 4,
+                spaceBetween: 30,
+            },
+        },
+    });
+</script>
+{% endblock %}
