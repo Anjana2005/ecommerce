@@ -149,20 +149,6 @@ class ProductSize(models.Model):
         return f"{self.product.name} - {self.get_size_display()}"
 
 
-# class ProductColor(models.Model):
-#     """Available colors for products"""
-#     product = models.ForeignKey(Product, related_name='colors', on_delete=models.CASCADE)
-#     name = models.CharField(max_length=50)
-#     hex_code = models.CharField(max_length=7, help_text="Color hex code (e.g., #FF5733)")
-#     available = models.BooleanField(default=True)
-
-#     class Meta:
-#         constraints = [UniqueConstraint(fields=['product', 'name'], name='unique_product_color')]
-#         ordering = ['name']
-
-#     def __str__(self):
-#         return f"{self.product.name} - {self.name}"
-
 
 class Contact(models.Model):
     """Contact form submissions"""
@@ -208,4 +194,39 @@ class Blog(models.Model):
 
     def __str__(self):
         return f"{self.title} by {self.author.username}"
+
+
+class Offer(models.Model):
+    """Special offers and promotions"""
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    image = models.ImageField(upload_to='offers/', blank=True, null=True)
+    discount_percentage = models.PositiveIntegerField(blank=True, null=True, help_text="Discount percentage (e.g., 20 for 20%)")
+    discount_amount = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, help_text="Fixed discount amount")
+    valid_from = models.DateTimeField()
+    valid_until = models.DateTimeField()
+    is_active = models.BooleanField(default=True)
+    priority = models.PositiveIntegerField(default=0, help_text="Higher priority offers appear first")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-priority', '-created_at']
+
+    def __str__(self):
+        return self.title
+
+    def is_valid(self):
+        """Check if the offer is currently valid"""
+        from django.utils import timezone
+        now = timezone.now()
+        return self.is_active and self.valid_from <= now <= self.valid_until
+
+    def get_discount_display(self):
+        """Return a display string for the discount"""
+        if self.discount_percentage:
+            return f"{self.discount_percentage}% OFF"
+        elif self.discount_amount:
+            return f"₹{self.discount_amount} OFF"
+        return ""
  

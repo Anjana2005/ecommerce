@@ -198,8 +198,10 @@
 
 {% block content %}
 <div class="shop-header">
-    <h1>{% if category %}{{ category.name }}{% else %}All Products{% endif %}</h1>
-    <p>{% if category %}{{ category.description }}{% else %}Discover our complete collection{% endif %}</p>
+    {% if category %}
+    <h1>{{ category.name }}</h1>
+    <p>{{ category.description }}</p>
+    {% endif %}
 </div>
 
 <div class="container">
@@ -214,7 +216,6 @@
 
             <h3>Categories</h3>
             <ul>
-                <li><a href="{% url 'shop:product_list' %}" {% if not category %}class="active"{% endif %}>All Products</a></li>
                 {% for cat in categories %}
                 <li>
                     <a href="{{ cat.get_absolute_url }}" {% if category == cat %}class="active"{% endif %}>

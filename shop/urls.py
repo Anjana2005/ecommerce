@@ -45,5 +45,9 @@ urlpatterns = [
     path('dashboard/blogs/<int:id>/', views.admin_blog_detail, name='admin_blog_detail'),
     path('dashboard/blogs/<int:id>/edit/', views.admin_blog_edit, name='admin_blog_edit'),
     path('dashboard/blogs/<int:id>/delete/', views.admin_blog_delete, name='admin_blog_delete'),
+    path('dashboard/offers/', views.admin_offers, name='admin_offers'),
+    path('dashboard/offers/create/', views.admin_offer_create, name='admin_offer_create'),
+    path('dashboard/offers/<int:id>/', views.admin_offer_detail, name='admin_offer_detail'),
+    path('dashboard/offers/<int:id>/delete/', views.admin_offer_delete, name='admin_offer_delete'),
     path('profile/', views.profile, name='profile'),
 ]

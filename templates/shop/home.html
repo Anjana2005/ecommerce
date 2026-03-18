@@ -635,6 +635,229 @@
 @keyframes fadeOut {
   to { opacity: 0; visibility: hidden; }
 }
+
+/* Offer Modal Animations */
+.custom-modal {
+    animation: backdropFadeIn 0.4s ease-out !important;
+}
+
+.custom-modal.closing {
+    animation: backdropFadeOut 0.4s ease-in forwards !important;
+}
+
+.custom-modal.closing .modal-content {
+    animation: modalSlideOut 0.4s cubic-bezier(0.64, 0, 1, 1) forwards !important;
+}
+
+@keyframes backdropFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes backdropFadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes modalSlideOut {
+    from {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.8) translateY(50px);
+    }
+}
+
+.custom-modal .modal-content {
+    animation: modalSlideIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8) translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.custom-modal .modal-header {
+    animation: headerSlideDown 0.7s ease-out 0.1s both !important;
+}
+
+@keyframes headerSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.custom-modal #modalOfferImage {
+    animation: imageZoomIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both !important;
+}
+
+@keyframes imageZoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.7) rotateY(10deg);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) rotateY(0deg);
+    }
+}
+
+.custom-modal .modal-body > div > div:last-child {
+    animation: detailsFadeInUp 0.7s ease-out 0.3s both !important;
+}
+
+@keyframes detailsFadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.custom-modal .modal-body {
+    animation: bodyFadeIn 0.6s ease-out 0.1s both !important;
+}
+
+@keyframes bodyFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.custom-modal .modal-footer {
+    animation: footerSlideUp 0.6s ease-out 0.4s both !important;
+}
+
+@keyframes footerSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Modal Close Button Animation */
+.custom-modal .modal-close {
+    animation: closeButtonRotate 0.5s ease-out 0.5s both !important;
+    transition: all 0.3s ease !important;
+}
+
+@keyframes closeButtonRotate {
+    from {
+        opacity: 0;
+        transform: rotate(-90deg) scale(0);
+    }
+    to {
+        opacity: 1;
+        transform: rotate(0) scale(1);
+    }
+}
+
+.custom-modal .modal-close:hover {
+    transform: rotate(90deg) scale(1.1) !important;
+}
+
+/* Discount Badge Animation */
+.custom-modal #modalOfferDiscount {
+    animation: discountPulse 1s ease-in-out 0.4s both !important;
+}
+
+@keyframes discountPulse {
+    0% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Button Animations */
+.custom-modal .btn {
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+.custom-modal .btn:hover {
+    transform: translateY(-3px) scale(1.05) !important;
+    box-shadow: 0 12px 30px rgba(180, 75, 154, 0.4) !important;
+}
+
+.custom-modal .btn-secondary:hover {
+    transform: translateY(-3px) scale(1.05) !important;
+    background: linear-gradient(135deg, #B44B9A, #F56FA1) !important;
+    color: white !important;
+}
+
+/* Staggered Animation for Modal Elements */
+.custom-modal h4 {
+    animation: textFadeIn 0.6s ease-out 0.35s both !important;
+}
+
+@keyframes textFadeIn {
+    from {
+        opacity: 0;
+        letter-spacing: -2px;
+    }
+    to {
+        opacity: 1;
+        letter-spacing: 0;
+    }
+}
+
+.custom-modal p {
+    animation: textFadeIn 0.6s ease-out 0.4s both !important;
+}
+
+/* Progress Bar Animation */
+.custom-modal [style*="width: 70%"] {
+    animation: progressBarFill 1s ease-out 0.5s both !important;
+    transform-origin: left !important;
+}
+
+@keyframes progressBarFill {
+    from {
+        width: 0% !important;
+        opacity: 0;
+    }
+    to {
+        width: 70% !important;
+        opacity: 1;
+    }
+}
 </style>
 {% endblock %}
 
@@ -675,6 +898,76 @@
         </div>
     </div>
 </section>
+
+<!-- Offer Detail Modal -->
+<div id="offerModal" class="custom-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; align-items: center; justify-content: center;">
+    <div class="modal-content" style="background: white; border-radius: 20px; max-width: 800px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+        <div class="modal-header" style="background: linear-gradient(135deg, #B44B9A, #F56FA1); color: white; border-radius: 20px 20px 0 0; padding: 30px; position: relative;">
+            <h5 class="modal-title" style="font-size: 1.8rem; font-weight: 700; margin: 0;">
+                <i class="fas fa-gift" style="margin-right: 10px;"></i>
+                <span id="modalOfferTitle">Special Offer</span>
+            </h5>
+            <button type="button" class="modal-close" onclick="closeOfferModal()" style="position: absolute; top: 20px; right: 20px; background: none; border: none; color: white; font-size: 2rem; cursor: pointer; opacity: 0.8;">
+                <span>&times;</span>
+            </button>
+        </div>
+        <div class="modal-body" style="padding: 40px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                <div>
+                    <div id="modalOfferImage" style="width: 100%; height: 250px; background: linear-gradient(135deg, #B44B9A, #F56FA1); border-radius: 15px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                        <i class="fas fa-percent" style="font-size: 4rem; color: white;"></i>
+                    </div>
+                </div>
+                <div>
+                    <div style="background: linear-gradient(135deg, #FF6B9D, #FFA07A); color: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; text-align: center;">
+                        <h3 style="font-size: 2rem; font-weight: 700; margin-bottom: 5px;" id="modalOfferDiscount">50% OFF</h3>
+                        <p style="margin: 0; font-size: 1.1rem;">Limited Time Offer</p>
+                    </div>
+
+                    <div style="margin-bottom: 25px;">
+                        <h4 style="color: #333; font-weight: 600; margin-bottom: 15px;">Offer Details</h4>
+                        <p id="modalOfferDescription" style="color: #666; line-height: 1.6; font-size: 1rem;">
+                            Get amazing discounts on our premium collection. Don't miss out on this limited time offer!
+                        </p>
+                    </div>
+
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 25px;">
+                        <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                            <i class="fas fa-clock" style="color: #B44B9A; margin-right: 10px; font-size: 1.2rem;"></i>
+                            <span style="color: #666; font-weight: 500;">Valid until:</span>
+                            <span style="color: #B44B9A; font-weight: 600; margin-left: 5px;" id="modalOfferValidUntil">Dec 31, 2024</span>
+                        </div>
+                        <div style="width: 100%; height: 6px; background: #e9ecef; border-radius: 3px; overflow: hidden;">
+                            <div style="width: 70%; height: 100%; background: linear-gradient(135deg, #B44B9A, #F56FA1); border-radius: 3px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer" style="padding: 30px; background: #f8f9fa; border-radius: 0 0 20px 20px; display: flex; justify-content: flex-end; gap: 15px;">
+            <button type="button" class="btn btn-secondary" onclick="closeOfferModal()" style="padding: 12px 30px; border-radius: 25px; font-weight: 600; background: #6c757d; color: white; border: none; cursor: pointer;">
+                <i class="fas fa-times" style="margin-right: 8px;"></i>Close
+            </button>
+            <a href="{% url 'shop:product_list' %}" class="btn btn-primary" style="background: linear-gradient(135deg, #B44B9A, #F56FA1); border: none; padding: 12px 30px; border-radius: 25px; font-weight: 600; color: white; text-decoration: none; display: inline-flex; align-items: center;">
+                <i class="fas fa-shopping-bag" style="margin-right: 8px;"></i>Shop Now
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden Offer Data Storage -->
+{% if active_offers %}
+    {% for offer in active_offers %}
+    <button type="button" class="shop-now-btn" style="display: none;" 
+        data-offer-id="{{ offer.id }}"
+        data-offer-title="{{ offer.title }}"
+        data-offer-description="{{ offer.description }}"
+        data-offer-discount="{% if offer.discount_percentage %}{{ offer.discount_percentage }}% OFF{% elif offer.discount_amount %}₹{{ offer.discount_amount }} OFF{% endif %}"
+        data-offer-valid-until="{{ offer.valid_until|date:'M d, Y' }}"
+        data-offer-image="{% if offer.image %}{{ offer.image.url }}{% endif %}">
+    </button>
+    {% endfor %}
+{% endif %}
 
 <!-- Categories Section -->
 <div class="container">
@@ -817,6 +1110,60 @@
   </div>
 </section>
 
+<!-- Latest Blogs Section -->
+{% if latest_blogs %}
+<section class="latest-blogs" style="padding: 80px 0; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+    <div class="container">
+        <div class="section-title" style="text-align: center; margin-bottom: 50px;">
+            <h2 style="color: #B44B9A; font-size: 2.5rem; margin-bottom: 10px;">Latest Blogs</h2>
+            <p style="color: #6c757d; font-size: 1.1rem;">Stay inspired with our latest fashion stories and tips</p>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto;">
+            {% for blog in latest_blogs %}
+            <div class="blog-card" style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.1); transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer;"
+                onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 15px 35px rgba(0,0,0,0.2)';"
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px 20px rgba(0,0,0,0.1)';">
+                
+                <!-- Blog Image -->
+                {% if blog.image %}
+                <div style="width: 100%; height: 200px; overflow: hidden;">
+                    <img src="{{ blog.image.url }}" alt="{{ blog.title }}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;"
+                        onmouseover="this.style.transform='scale(1.05)';"
+                        onmouseout="this.style.transform='scale(1)';">
+                </div>
+                {% else %}
+                <div style="width: 100%; height: 200px; background: linear-gradient(135deg, #B44B9A, #F56FA1); display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-pen-fancy" style="font-size: 3rem; color: white;"></i>
+                </div>
+                {% endif %}
+                
+                <!-- Blog Content -->
+                <div style="padding: 25px;">
+                    <h3 style="color: #333; font-size: 1.3rem; margin-bottom: 10px; font-weight: 600;">{{ blog.title }}</h3>
+                    <p style="color: #666; font-size: 0.95rem; line-height: 1.6; margin-bottom: 15px;">
+                        {{ blog.description|truncatechars:120 }}
+                    </p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: #B44B9A; font-weight: 500; font-size: 0.9rem;">By {{ blog.author.get_full_name|default:blog.author.username }}</span>
+                        <span style="color: #999; font-size: 0.85rem;">{{ blog.created_at|date:"M d, Y" }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="{% url 'shop:blog_list' %}" class="btn btn-primary" style="padding: 12px 30px; background: linear-gradient(135deg, #B44B9A, #F56FA1); color: white; border-radius: 25px; text-decoration: none; font-weight: 600; transition: transform 0.3s ease, box-shadow 0.3s ease; display: inline-block;"
+                onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 25px rgba(245, 111, 161, 0.4)';"
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                View All Blogs <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
 <!-- Features Section -->
 <section class="features">
     <div class="features-grid">
@@ -908,6 +1255,90 @@
                 spaceBetween: 30,
             },
         },
+    });
+
+    // Offer Modal Functionality
+    function openOfferModal() {
+        const modal = document.getElementById('offerModal');
+        modal.classList.remove('closing');
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    }
+
+    function closeOfferModal() {
+        const modal = document.getElementById('offerModal');
+        modal.classList.add('closing');
+        
+        // Wait for animation to complete before hiding
+        setTimeout(function() {
+            modal.style.display = 'none';
+            modal.classList.remove('closing');
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        }, 400);
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('offerModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeOfferModal();
+        }
+    });
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && document.getElementById('offerModal').style.display === 'flex') {
+            closeOfferModal();
+        }
+    });
+
+    function updateAndShowOfferModal(title, description, discount, validUntil, imageUrl) {
+        // Update modal content
+        document.getElementById('modalOfferTitle').textContent = title;
+        document.getElementById('modalOfferDescription').textContent = description;
+        document.getElementById('modalOfferDiscount').textContent = discount;
+        document.getElementById('modalOfferValidUntil').textContent = validUntil;
+
+        // Update modal image
+        const modalImageDiv = document.getElementById('modalOfferImage');
+        if (imageUrl) {
+            modalImageDiv.innerHTML = `<img src="${imageUrl}" alt="${title}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 15px;">`;
+        } else {
+            modalImageDiv.innerHTML = '<i class="fas fa-percent" style="font-size: 4rem; color: white;"></i>';
+        }
+
+        // Show modal
+        openOfferModal();
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Auto-load first active offer on page load
+        const offerButtons = document.querySelectorAll('.shop-now-btn');
+        
+        if (offerButtons.length > 0) {
+            // Get first offer button data
+            const firstButton = offerButtons[0];
+            const title = firstButton.getAttribute('data-offer-title');
+            const description = firstButton.getAttribute('data-offer-description');
+            const discount = firstButton.getAttribute('data-offer-discount');
+            const validUntil = firstButton.getAttribute('data-offer-valid-until');
+            const imageUrl = firstButton.getAttribute('data-offer-image');
+
+            // Show modal automatically on page load
+            updateAndShowOfferModal(title, description, discount, validUntil, imageUrl);
+        }
+
+        // Add click handlers to offer buttons
+        offerButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const title = this.getAttribute('data-offer-title');
+                const description = this.getAttribute('data-offer-description');
+                const discount = this.getAttribute('data-offer-discount');
+                const validUntil = this.getAttribute('data-offer-valid-until');
+                const imageUrl = this.getAttribute('data-offer-image');
+
+                updateAndShowOfferModal(title, description, discount, validUntil, imageUrl);
+            });
+        });
     });
 </script>
 {% endblock %}

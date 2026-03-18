@@ -19,7 +19,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Category, Product, Contact, Order
+from .models import Category, Product, Contact, Order, Blog, Offer
 
 # def cart_add(request, product_id):
 #     product = Product.objects.get(id=product_id)
@@ -131,10 +131,18 @@ def home(request):
     # Get latest products
     new_arrivals = Product.objects.filter(available=True).order_by('-created_at')[:8]
     
+    # Get latest blogs
+    latest_blogs = Blog.objects.all().order_by('-created_at')[:3]
+    
+    # Get active offers (prioritized)
+    active_offers = Offer.objects.filter(is_active=True).order_by('-priority', '-created_at')[:3]
+    
     context = {
         'featured_products': featured_products,
         'categories': categories,
         'new_arrivals': new_arrivals,
+        'latest_blogs': latest_blogs,
+        'active_offers': active_offers,
     }
     return render(request, 'shop/home.html', context)
 
@@ -965,6 +973,117 @@ def admin_blog_delete(request, id):
             messages.error(request, f'Error deleting blog: {str(e)}')
     
     return render(request, 'shop/admin/blog_delete_confirm.html', {'blog': blog})
+
+
+@login_required(login_url='shop:login')
+def admin_offers(request):
+    """Manage offers"""
+    if not request.user.is_staff:
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('shop:home')
+    
+    offers = Offer.objects.all().order_by('-created_at')
+    paginator = Paginator(offers, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    context = {
+        'page_obj': page_obj,
+        'offers': page_obj,
+    }
+    return render(request, 'shop/admin/offers.html', context)
+
+
+@login_required(login_url='shop:login')
+def admin_offer_create(request):
+    """Create new offer"""
+    if not request.user.is_staff:
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('shop:home')
+    
+    if request.method == 'POST':
+        try:
+            offer = Offer(
+                title=request.POST.get('title'),
+                description=request.POST.get('description'),
+                discount_percentage=request.POST.get('discount_percentage') or None,
+                discount_amount=request.POST.get('discount_amount') or None,
+                valid_from=request.POST.get('valid_from'),
+                valid_until=request.POST.get('valid_until'),
+                is_active=request.POST.get('is_active') == 'on',
+                priority=request.POST.get('priority') or 0,
+            )
+            
+            # Handle image upload
+            if request.FILES.get('image'):
+                offer.image = request.FILES.get('image')
+            
+            offer.save()
+            
+            messages.success(request, 'Offer created successfully!')
+            return redirect('shop:admin_offer_detail', id=offer.id)
+        except Exception as e:
+            messages.error(request, f'Error creating offer: {str(e)}')
+    
+    context = {}
+    return render(request, 'shop/admin/offer_create.html', context)
+
+
+@login_required(login_url='shop:login')
+def admin_offer_detail(request, id):
+    """View/Edit offer"""
+    if not request.user.is_staff:
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('shop:home')
+    
+    offer = get_object_or_404(Offer, id=id)
+    
+    if request.method == 'POST':
+        try:
+            offer.title = request.POST.get('title')
+            offer.description = request.POST.get('description')
+            offer.discount_percentage = request.POST.get('discount_percentage') or None
+            offer.discount_amount = request.POST.get('discount_amount') or None
+            offer.valid_from = request.POST.get('valid_from')
+            offer.valid_until = request.POST.get('valid_until')
+            offer.is_active = request.POST.get('is_active') == 'on'
+            offer.priority = request.POST.get('priority') or 0
+            
+            # Handle image upload
+            if request.FILES.get('image'):
+                offer.image = request.FILES.get('image')
+            
+            offer.save()
+            
+            messages.success(request, 'Offer updated successfully!')
+            return redirect('shop:admin_offers')
+        except Exception as e:
+            messages.error(request, f'Error updating offer: {str(e)}')
+    
+    context = {
+        'offer': offer,
+    }
+    return render(request, 'shop/admin/offer_detail.html', context)
+
+
+@login_required(login_url='shop:login')
+def admin_offer_delete(request, id):
+    """Delete offer"""
+    if not request.user.is_staff:
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('shop:home')
+    
+    offer = get_object_or_404(Offer, id=id)
+    
+    if request.method == 'POST':
+        try:
+            offer.delete()
+            messages.success(request, 'Offer deleted successfully!')
+            return redirect('shop:admin_offers')
+        except Exception as e:
+            messages.error(request, f'Error deleting offer: {str(e)}')
+    
+    return render(request, 'shop/admin/offer_delete.html', {'offer': offer})
 # from django.shortcuts import render, redirect
 # from urllib.parse import quote
 # import random
@@ -1050,6 +1169,18 @@ from django.shortcuts import render, redirect
 from urllib.parse import quote
 from .models import Product, Order, OrderItem
 
+def get_size_display(size_code):
+    """Convert size code to display name"""
+    size_map = {
+        'XS': 'Extra Small',
+        'S': 'Small',
+        'M': 'Medium',
+        'L': 'Large',
+        'XL': 'Extra Large',
+        'XXL': 'Double Extra Large',
+    }
+    return size_map.get(size_code, size_code if size_code else "Not selected")
+
 def checkout(request):
     cart = request.session.get('cart', {})
 
@@ -1108,7 +1239,11 @@ def checkout(request):
         for item in order_items:
             category_name = item.product.category.name if item.product and item.product.category else "N/A"
             product_name  = item.product.name if item.product else "Deleted Product"
-            size          = item.size or "Not selected"
+            size_code = item.size or ""
+            
+            # Fetch the display size name
+            size_display = get_size_display(size_code) if size_code else None
+            
             qty           = item.quantity
             price         = float(item.price)
             subtotal      = price * qty
@@ -1116,7 +1251,8 @@ def checkout(request):
 
             message += f"• {product_name}\n"
             message += f"   Category: {category_name}\n"
-            message += f"   Size: {size}\n"
+            if size_display:
+                message += f"   Size: {size_display}\n"
             message += f"   Qty: {qty}\n"
             message += f"   Price: ₹{subtotal:.2f}\n\n"
 
@@ -1125,7 +1261,7 @@ def checkout(request):
         maps_link = f"https://www.google.com/maps/search/?api=1&query={quote(address)}"
         message += f"📍 Location Map:\n{maps_link}\n\n"
 
-        upi_link = f"upi://pay?pa=9645454083@superyes&pn=FloraStore&am={total:.2f}&cu=INR"
+        upi_link = f"upi://pay?pa=anjanakattungal@oksbi&pn=FloraStore&am={total:.2f}&cu=INR"
         message += f"💳 Pay here:\n{upi_link}"
 
         # ✅ Clear cart after order placed
